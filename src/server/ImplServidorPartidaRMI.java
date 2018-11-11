@@ -1,34 +1,40 @@
 package server;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 import common.IntServidorPartidasRMI;
-import common.Partida;
 
-public class ImplServidorPartidaRMI implements IntServidorPartidasRMI{
+@SuppressWarnings("serial")
+public class ImplServidorPartidaRMI extends UnicastRemoteObject implements IntServidorPartidasRMI {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2712848023629954136L;
 
-	@Override
-	public Partida nuevaPartida(int fila, int col, int barcos) {
-		// TODO Auto-generated method stub
-		return null;
+	protected ImplServidorPartidaRMI() throws RemoteException {
+		super();
 	}
-
-	@Override
-	public void pruebaCasilla(int fila, int col) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void getBarco(int id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void getSolucion() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	private Partida partida;
 	
+	@Override
+	public void nuevaPartida(int fila, int col, int barcos) {
+		 this.partida = new Partida(fila, col, barcos);
+	}
+
+	@Override
+	public int pruebaCasilla(int fila, int col) {
+		return this.partida.pruebaCasilla(fila, col);
+	}
+
+	@Override
+	public String getBarco(int id) {
+		return this.partida.getBarco(id);
+	}
+
+	@Override
+	public String[] getSolucion() {
+		return this.partida.getSolucion();
+	}
 
 }

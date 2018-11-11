@@ -1,17 +1,25 @@
 package server;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
+import common.IntCallbackCliente;
 //import common.IntCallbackCliente;
 import common.IntServidorJuegoRMI;
 import common.IntServidorPartidasRMI;
 
-public class ImplServidorJuegoRMI implements IntServidorJuegoRMI{
+@SuppressWarnings("serial")
+public class ImplServidorJuegoRMI extends UnicastRemoteObject implements IntServidorJuegoRMI {
+
+	private static final long serialVersionUID = -2787665753856301145L;
+
+	protected ImplServidorJuegoRMI() throws RemoteException {
+		super();
+	}
 
 	@Override
 	public IntServidorPartidasRMI nuevoServidorPartidas() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		return new ImplServidorPartidaRMI();
 	}
 
 	@Override
@@ -37,5 +45,6 @@ public class ImplServidorJuegoRMI implements IntServidorJuegoRMI{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 
 }
