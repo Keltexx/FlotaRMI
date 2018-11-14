@@ -52,7 +52,7 @@ public class ClienteFlotaRMI {
             System.setProperty("java.security.policy", "/FlotaRMI/src/client/java.policy");
             System.setSecurityManager(new SecurityManager());
 
-            String registryURL = "rmi://localhost:" + portNum + "/hello";
+            String registryURL = "rmi://localhost:" + portNum + "/flota";
             // find the remote object and cast it to an interface object
             IntServidorJuegoRMI h = (IntServidorJuegoRMI) Naming.lookup(registryURL);
 
