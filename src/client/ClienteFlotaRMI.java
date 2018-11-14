@@ -49,24 +49,26 @@ public class ClienteFlotaRMI {
             // downloading is in use for this application.
             // The following sentence avoids the need to use
             // the option -DJava.security.policy=..." when launching the client
-            System.setProperty("java.security.policy", "/FlotaRMI/src/client/java.policy");
+            System.setProperty("java.security.policy", "src/client/java.policy");
             System.setSecurityManager(new SecurityManager());
 
             String registryURL = "rmi://localhost:" + portNum + "/flota";
             // find the remote object and cast it to an interface object
+         
+            System.out.println("antes de h:  "+registryURL);
             IntServidorJuegoRMI h = (IntServidorJuegoRMI) Naming.lookup(registryURL);
+            System.out.println("despues de h");
 
             System.out.println("Lookup completed ");
             // invoke the remote method
-            IntServidorPartidasRMI partida = (IntServidorPartidasRMI) h.nuevoServidorPartidas();
+            IntServidorPartidasRMI partida = h.nuevoServidorPartidas();
             ClienteFlotaRMI cliente = new ClienteFlotaRMI();
-            cliente.partida=partida;
+//            cliente.partida=partida;
             cliente.ejecuta();
             
         } // end try
         catch (Exception e) {
-            System.out.println(
-                    "Exception in HelloClient: " + e);
+            System.out.println("Exception in Client: " + e);
         }
     } //end main
 
