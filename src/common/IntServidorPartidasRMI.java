@@ -1,6 +1,9 @@
 package common;
 
-public interface IntServidorPartidasRMI {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface IntServidorPartidasRMI extends Remote{
 	
 	/**
 	 *  Dado el número de filas y columnas del tablero y el número de barcos,
@@ -10,7 +13,7 @@ public interface IntServidorPartidasRMI {
 	 * @param col
 	 * @param barcos
 	 */
-	public void nuevaPartida (int fila, int col, int barcos);
+	public void nuevaPartida (int fila, int col, int barcos) throws RemoteException;
 	
 	/**
 	 *  Dada la fila y columna de una casilla, llama a la función del mismo
@@ -20,7 +23,7 @@ public interface IntServidorPartidasRMI {
 	 * @param   col   columna de la casilla
 	 * @return   resultado de marcar la casilla: AGUA, ya TOCADO, ya HUNDIDO, identidad del barco recien hundido
 	 */
-	public int pruebaCasilla(int fila, int col);
+	public int pruebaCasilla(int fila, int col) throws RemoteException;
 	
 	/**
 	 * Dado el identificador de un barco, llama a la función del mismo nombre del 
@@ -29,7 +32,7 @@ public interface IntServidorPartidasRMI {
 	 * @param	idBarco	indice del barco en el vector de barcos
 	 * @return	        cadena con los datos del barco
 	 */
-	public String getBarco(int id); //TODO: llamar a la funcion getBarco del objeto Partida y devuelve el resultado
+	public String getBarco(int id) throws RemoteException; //TODO: llamar a la funcion getBarco del objeto Partida y devuelve el resultado
 	
 	/**
 	 * Llama a la funci´on del mismo nombre del objeto Partida y devuelve el
@@ -37,5 +40,5 @@ public interface IntServidorPartidasRMI {
 	 * 
 	 * @return	vector de cadenas, una por barco con la informacion de getBarco
 	 */
-	public String[] getSolucion(); //TODO: llama a la funcion getSolucion del objeto Partida y devulve el resultado
+	public String[] getSolucion() throws RemoteException; //TODO: llama a la funcion getSolucion del objeto Partida y devulve el resultado
 }

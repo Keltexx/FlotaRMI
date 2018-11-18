@@ -26,12 +26,12 @@ public class ServidorFlotaRMI {
             // stub downloading is in use for this application.
             // Te following sentence avoids the need to use
             // the option -DJava.security.policy=..." when launching the client
-             System.setProperty("java.security.policy", "src/server/java.policy");
-             System.setSecurityManager(new SecurityManager());
+//             System.setProperty("java.security.policy", "src/server/java.policy");
+//             System.setSecurityManager(new SecurityManager());
 
             startRegistry(RMIPortNum);
 
-            ImplServidorPartidaRMI exportedObj = new ImplServidorPartidaRMI();
+            ImplServidorJuegoRMI exportedObj = new ImplServidorJuegoRMI();
             registryURL = "rmi://localhost:" + portNum + "/flota";
             Naming.rebind(registryURL, exportedObj);
             System.out.println("Server registered. Registry contains:");

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -49,8 +50,8 @@ public class ClienteFlotaRMI {
             // downloading is in use for this application.
             // The following sentence avoids the need to use
             // the option -DJava.security.policy=..." when launching the client
-            System.setProperty("java.security.policy", "src/client/java.policy");
-            System.setSecurityManager(new SecurityManager());
+//            System.setProperty("java.security.policy", "src/client/java.policy");
+//            System.setSecurityManager(new SecurityManager());
 
             String registryURL = "rmi://localhost:" + portNum + "/flota";
             // find the remote object and cast it to an interface object
@@ -63,7 +64,7 @@ public class ClienteFlotaRMI {
             // invoke the remote method
             IntServidorPartidasRMI partida = h.nuevoServidorPartidas();
             ClienteFlotaRMI cliente = new ClienteFlotaRMI();
-//            cliente.partida=partida;
+            cliente.partida=partida;
             cliente.ejecuta();
             
         } // end try
@@ -78,7 +79,12 @@ public class ClienteFlotaRMI {
 	 */
 	private void ejecuta() {
 		// Instancia la primera partida
-		partida.nuevaPartida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+		try {
+			partida.nuevaPartida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -215,10 +221,16 @@ public class ClienteFlotaRMI {
 			quedan=0;
 			for (int i = 0; i < numFilas; i++) {
 				for (int j = 0; j < numColumnas; j++){
-					int toque = partida.pruebaCasilla(i, j);
+					int toque = -5;
+					try {
+						toque = partida.pruebaCasilla(i, j);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if(toque==-1) {
 						guiTablero.pintaBoton(guiTablero.buttons[i][j],Color.cyan);
-					}else {
+					}else if(toque!=-5){
 						guiTablero.pintaBoton(guiTablero.buttons[i][j],Color.magenta);
 					}
 				}
@@ -309,7 +321,12 @@ public class ClienteFlotaRMI {
 				break;
 			case "Nueva partida":
 				guiTablero.limpiaTablero();
-				partida.nuevaPartida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+				try {
+					partida.nuevaPartida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				quedan = NUMBARCOS; disparos = 0;
 				guiTablero.cambiaEstado("Intentos: " + disparos + "    Barcos restantes: " + quedan);
 				break;				
@@ -339,7 +356,13 @@ public class ClienteFlotaRMI {
 				//En el caso de que el boton no este pintado todavia
 				if(!guiTablero.buttons[i][j].getBackground().equals(Color.yellow) &&
 						!guiTablero.buttons[i][j].getBackground().equals(Color.red)){
-					int toque = partida.pruebaCasilla(i,j);
+					int toque = -5;
+					try {
+						toque = partida.pruebaCasilla(i,j);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					switch(toque){
 						case -1:	//AGUA
 							guiTablero.pintaBoton(guiTablero.buttons[i][j],Color.cyan);
@@ -347,9 +370,16 @@ public class ClienteFlotaRMI {
 						case -2:	//TOCADO
 							guiTablero.pintaBoton(guiTablero.buttons[i][j],Color.yellow);
 							break;
+						case -5:
+							break;
 						default:	//HUNDIDO
 							quedan--;
+						try {
 							guiTablero.pintaBarcoHundido(partida.getBarco(toque));
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 							break;
 					} //end switch
 				}
