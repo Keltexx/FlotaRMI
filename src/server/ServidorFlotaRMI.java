@@ -6,23 +6,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-
 public class ServidorFlotaRMI {
 	public static void main(String args[]) {
-        //InputStreamReader is = new InputStreamReader(System.in);
-        //BufferedReader br = new BufferedReader(is);
-        //String portNum; 
         String registryURL;
 
         try {
-            //System.out.println("Enter the RMIregistry port number:");
-            //portNum = (br.readLine()).trim();
-            //int RMIPortNum = Integer.parseInt(portNum);
-
             startRegistry(1099);
 
             ImplServidorJuegoRMI exportedObj = new ImplServidorJuegoRMI();
-            //registryURL = "rmi://localhost:" + portNum + "/flota";
             registryURL = "rmi://localhost:1099/flota";
             Naming.rebind(registryURL, exportedObj);
             System.out.println("Server registered. Registry contains:");

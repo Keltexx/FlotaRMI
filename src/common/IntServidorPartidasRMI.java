@@ -32,13 +32,13 @@ public interface IntServidorPartidasRMI extends Remote{
 	 * @param	idBarco	indice del barco en el vector de barcos
 	 * @return	        cadena con los datos del barco
 	 */
-	public String getBarco(int id) throws RemoteException; //TODO: llamar a la funcion getBarco del objeto Partida y devuelve el resultado
+	public String getBarco(int id) throws RemoteException;
 	
 	/**
-	 * Llama a la funci´on del mismo nombre del objeto Partida y devuelve el
+	 * Llama a la funcion del mismo nombre del objeto Partida y devuelve el
 	 * resultado obtenido
 	 * 
 	 * @return	vector de cadenas, una por barco con la informacion de getBarco
 	 */
-	public String[] getSolucion() throws RemoteException; //TODO: llama a la funcion getSolucion del objeto Partida y devulve el resultado
+	public String[] getSolucion() throws RemoteException;
 }

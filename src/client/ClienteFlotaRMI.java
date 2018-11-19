@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Scanner;
@@ -19,48 +18,29 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.sun.glass.events.WindowEvent;
-
 import common.IntCallbackCliente;
 import common.IntServidorJuegoRMI;
 import common.IntServidorPartidasRMI;
 
 
 public class ClienteFlotaRMI {
-	
 	public static final int NUMFILAS=8, NUMCOLUMNAS=8, NUMBARCOS=6; //	Parametros por defecto de una partida
-	static IntCallbackCliente callback;			// Instancia del callback
-//	static int RMIPort;
-//	static String hostName;
-	private static IntServidorJuegoRMI juego;
-	private GuiTablero guiTablero = null;		// El juego se encarga de crear y modificar la interfaz gráfica
-	private static IntServidorPartidasRMI partida;     // Objeto con los datos de la partida en juego
-	private String nombre;						//Nombre del jugador
+	static IntCallbackCliente callback;								// Instancia del callback
+	private static IntServidorJuegoRMI juego;						// Instancia del stub juego
+	private GuiTablero guiTablero = null;				// El juego se encarga de crear y modificar la interfaz grafica
+	private static IntServidorPartidasRMI partida;     				// Stub de la partida
+	private String nombre;
 	private int quedan = NUMBARCOS, disparos = 0; //Atributos de la partida guardados en el juego para simplificar su implementacion
-	
 	Scanner sc;
-	
 	
 	public static void main(String args[]) {
         try {
-        	/**
-        	 * Pide y almacena el host y el puerto del cliente
-        	 */
-//            InputStreamReader isr = new InputStreamReader(System.in);
-//            BufferedReader br = new BufferedReader(isr);
-//            System.out.println("Enter the RMIRegistry host name:");
-//            hostName = br.readLine();
-//            System.out.println("Enter the RMIregistry port number:");
-//            String portNum = br.readLine();
-//            RMIPort = Integer.parseInt(portNum);
-
-            //String registryURL = "rmi://localhost:" + portNum + "/flota";
             String registryURL = "rmi://localhost:1099/flota";
-            // busca el objeto remoto y lo castea a un objeto de la interfaz	// find the remote object and cast it to an interface object
+            // busca el objeto remoto y lo castea a un objeto de la interfaz
             juego = (IntServidorJuegoRMI) Naming.lookup(registryURL);
 
             System.out.println("Lookup completed ");
-            //invoca el metodo remoto// invoke the remote method
+            //invoca el metodo remoto
             partida = juego.nuevoServidorPartidas();
             ClienteFlotaRMI cliente = new ClienteFlotaRMI();
             cliente.partida=partida;
@@ -77,7 +57,9 @@ public class ClienteFlotaRMI {
 	 * Lanza una nueva hebra que crea la primera partida y dibuja la interfaz grafica: tablero
 	 */
 	private void ejecuta() {
-		// Instancia la partida de un jugador y pide el nombre del jugador
+		/**
+		 *  Instancia la partida de un jugador y pide el nombre del jugador
+		 */
 		try {
 			partida.nuevaPartida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
 			System.out.print("Indique su nombre de jugador: ");
@@ -113,16 +95,7 @@ public class ClienteFlotaRMI {
 			this.numFilas = numFilas;
 			this.numColumnas = numColumnas;
 			frame = new JFrame();
-			frame.addWindowListener(new WindowAdapter(){
-				public void WindowClosing(WindowEvent e){
-					try {
-						juego.borraPartida(nombre);
-						System.exit(0);
-					} catch (RemoteException e1) {
-						e1.printStackTrace();
-					}
-				}
-			});
+ 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setTitle(nombre);
 		}
 		/**
@@ -218,7 +191,6 @@ public class ClienteFlotaRMI {
 						cuadr.add(boton);
 					}
 				}
-				
 			}
 			frame.add(cuadr);
 		} // end anyadeGrid
@@ -265,8 +237,6 @@ public class ClienteFlotaRMI {
 					}
 				}
 			}
-			
-			
 		} // end muestraSolucion
 
 
@@ -287,16 +257,14 @@ public class ClienteFlotaRMI {
 				for (int i=filaInicial; i<tamanyo+filaInicial; i++)
 					pintaBoton(buttons[i][columnaInicial], Color.red);
 			}
-			
 			if (orientacion.equals("H")){
 				for (int i=columnaInicial; i<tamanyo+columnaInicial; i++)
 					pintaBoton(buttons[filaInicial][i], Color.red);
 			}
-			
 		} // end pintaBarcoHundido
 
 		/**
-		 * Pinta un botón de un color dado
+		 * Pinta un boton de un color dado
 		 * @param b			boton a pintar
 		 * @param color		color a usar
 		 */
@@ -308,7 +276,7 @@ public class ClienteFlotaRMI {
 		} // end pintaBoton
 
 		/**
-		 * Limpia las casillas del tablero pintándolas del gris por defecto
+		 * Limpia las casillas del tablero pintandolas del gris por defecto
 		 */
 		public void limpiaTablero() {
 			for (int i = 0; i < numFilas; i++) {
@@ -326,8 +294,6 @@ public class ClienteFlotaRMI {
 		public void liberaRecursos() {
 			frame.dispose();
 		} // end liberaRecursos
-
-
 	} // end class GuiTablero
 
 	/******************************************************************************************/
@@ -335,7 +301,7 @@ public class ClienteFlotaRMI {
 	/******************************************************************************************/
 
 	/**
-	 * Clase interna que escucha el menu de Opciones del tablero
+	 * Clase interna que escucha el menu de Opciones y Multijugador del tablero
 	 * 
 	 */
 	private class MenuListener implements ActionListener {
@@ -351,9 +317,11 @@ public class ClienteFlotaRMI {
 				}
 				guiTablero.liberaRecursos();
 				break;
+				
 			case "Mostrar solucion":
 				guiTablero.muestraSolucion();
 				break;
+				
 			case "Nueva partida":
 				guiTablero.limpiaTablero();
 				try {
@@ -377,6 +345,7 @@ public class ClienteFlotaRMI {
 					ex.printStackTrace();
 				}
 				break;
+				
 			case "Borrar propuesta":
 				try {
 					if(juego.borraPartida(nombre)){
@@ -388,6 +357,7 @@ public class ClienteFlotaRMI {
 					ex.printStackTrace();
 				}
 				break;
+				
 			case "Listar partidas":
 				try {
 					String[] listado = juego.listaPartidas();
@@ -403,7 +373,8 @@ public class ClienteFlotaRMI {
 					ex.printStackTrace();
 				}
 				break;
-			case "Aceptar partida":
+				
+			case "Aceptar partida":		// Pide el nombre del rival e intenta aceptar la partida
 				String nombreRival;
 				System.out.print("Indique el nombre del rival: ");
 				sc = new Scanner(System.in);
@@ -421,6 +392,7 @@ public class ClienteFlotaRMI {
 					ex.printStackTrace();
 				}
 				break;
+				
 			default:
 				break;
 			} //end switch

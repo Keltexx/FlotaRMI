@@ -21,9 +21,7 @@ public class Partida {
 	            quedan,  					// numero de barcos no hundidos
 	            disparos; 					// numero de disparos efectuados
 	
-	/**
-	 * Contructor por defecto. No hace nada
-	 */
+
 	public Partida() {}
 	
 	/**
