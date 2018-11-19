@@ -5,11 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import common.IntServidorPartidasRMI;
 
-@SuppressWarnings("serial")
 public class ImplServidorPartidaRMI extends UnicastRemoteObject implements IntServidorPartidasRMI {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2712848023629954136L;
 
 	protected ImplServidorPartidaRMI() throws RemoteException {

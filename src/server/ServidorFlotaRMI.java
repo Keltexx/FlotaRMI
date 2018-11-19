@@ -1,38 +1,29 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import common.IntServidorJuegoRMI;
 
 public class ServidorFlotaRMI {
 	public static void main(String args[]) {
-        InputStreamReader is = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(is);
-        String portNum, registryURL;
+        //InputStreamReader is = new InputStreamReader(System.in);
+        //BufferedReader br = new BufferedReader(is);
+        //String portNum; 
+        String registryURL;
 
         try {
-            System.out.println("Enter the RMIregistry port number:");
-            portNum = (br.readLine()).trim();
-            int RMIPortNum = Integer.parseInt(portNum);
+            //System.out.println("Enter the RMIregistry port number:");
+            //portNum = (br.readLine()).trim();
+            //int RMIPortNum = Integer.parseInt(portNum);
 
-
-            // start a security manager - this is needed if
-            // stub downloading is in use for this application.
-            // Te following sentence avoids the need to use
-            // the option -DJava.security.policy=..." when launching the client
-//             System.setProperty("java.security.policy", "src/server/java.policy");
-//             System.setSecurityManager(new SecurityManager());
-
-            startRegistry(RMIPortNum);
+            startRegistry(1099);
 
             ImplServidorJuegoRMI exportedObj = new ImplServidorJuegoRMI();
-            registryURL = "rmi://localhost:" + portNum + "/flota";
+            //registryURL = "rmi://localhost:" + portNum + "/flota";
+            registryURL = "rmi://localhost:1099/flota";
             Naming.rebind(registryURL, exportedObj);
             System.out.println("Server registered. Registry contains:");
             // list names currently in the registry
